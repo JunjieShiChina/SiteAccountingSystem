@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"></meta>
+<title>工地记账系统</title>
+<link rel="stylesheet" type="text/css"
+	href="easyui/1.6.10/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="easyui/1.6.10/themes/icon.css" />
+<link rel="stylesheet" type="text/css" href="easyui/1.6.10/demo.css" />
+<script type="text/javascript" src="easyui/1.6.10/jquery.min.js"></script>
+<script type="text/javascript" src="easyui/1.6.10/jquery.easyui.min.js"></script>
+<script type="text/javascript">
+function dologin(){
+	$("form").submit();
+}
+</script>
+</head>
+<body>
+	<div id="w" class="easyui-window" title="工地记账系统"
+		data-options="modal:true,iconCls:'Lockgo',closable:false,minimizable:false"
+		style="width: 400px; padding: 20px 70px 20px 70px;">
+		<form action="login" method="post">
+			<div style="margin-bottom: 10px">
+				<input class="easyui-textbox" id="logname" name="logname"
+					style="width: 100%; height: 30px; padding: 12px"
+					data-options="prompt:'用户名',iconCls:'icon-man',iconWidth:38" />
+			</div>
+			<div style="margin-bottom: 20px">
+				<input class="easyui-textbox" id="logpass" name="logpass"
+					type="password" style="width: 100%; height: 30px; padding: 12px"
+					data-options="prompt:'密码',iconCls:'icon-lock',iconWidth:38" />
+			</div>
+			<div>
+				<a href="javascript:;" onclick="dologin()" class="easyui-linkbutton"
+					data-options="iconCls:'icon-ok'"
+					style="padding: 5px 0px; width: 100%;"> <span
+					style="font-size: 14px;">登录</span>
+				</a>
+			</div>
+		</form>
+	</div>
+
+</body>
+<script type="text/javascript" src="easyui/1.6.10/jquery.easyui.min.js"></script>
+</html>

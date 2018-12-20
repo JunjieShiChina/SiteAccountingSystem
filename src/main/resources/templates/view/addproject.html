@@ -1,0 +1,47 @@
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Basic Form - jQuery EasyUI Demo</title>
+	<link rel="stylesheet" type="text/css" href="easyui/1.6.10/themes/default/easyui.css" />
+	<link rel="stylesheet" type="text/css" href="easyui/1.6.10/themes/icon.css" />
+	<script type="text/javascript" src="easyui/1.6.10/jquery.min.js"></script>
+	<script type="text/javascript" src="easyui/1.6.10/jquery.easyui.min.js"></script>
+</head>
+<body>
+	<div style="margin:20px 0;" align="center"></div>
+	<div class="easyui-panel" title="添加项目" style="width:400px" align="center">
+		<div style="text-align:center; padding:10px 60px 20px 60px" align="center">
+	    <form id="ff" method="post" action="addProject">
+	    	<table cellpadding="5">
+	    		<tr>
+	    			<td>Name:</td>
+	    			<td><input class="easyui-textbox" type="text" name="projectName" data-options="required:true"></input></td>
+	    		</tr>
+	    	</table>
+	    </form>
+	    <div style="text-align:center;padding:5px">
+	    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">Submit</a>
+	    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">Clear</a>
+	    </div>
+	    </div>
+	</div>
+	<script>
+		function submitForm(){
+			$('#ff').form('submit', {
+				url:"/addProject",
+				success:function(data){
+					var parsedJson = $.parseJSON(data);
+					if(parsedJson.status == 200) {
+						$.messager.alert('提示', parsedJson.message, 'info', function(){
+							$('#win').dialog('close');
+						});
+					}
+				}
+			});
+		}
+		function clearForm(){
+			$('#ff').form('clear');
+		}
+	</script>
+</body>
+</html>

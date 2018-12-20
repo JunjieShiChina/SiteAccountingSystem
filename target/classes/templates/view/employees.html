@@ -1,0 +1,459 @@
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Basic Form - jQuery EasyUI Demo</title>
+<link rel="stylesheet" type="text/css"
+	href="easyui/1.6.10/themes/bootstrap/easyui.css" />
+<link rel="stylesheet" type="text/css" href="css/wu.css" />
+<link rel="stylesheet" type="text/css" href="css/icon.css" />
+<link rel="stylesheet" type="text/css" href="mine/mycss.css" />
+<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="easyui/1.6.10/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="easyui/1.6.10/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="mine/myjs.js"></script>
+</head>
+<body>
+	<input id="projectIdInput" type="hidden" th:value="${ProjectId}"></input>
+	<table class="easyui-datagrid" id="employees" title="员工列表"
+		data-options="" toolbar="#tb">
+	</table>
+	<div id="tb">
+		<span>员工姓名:</span>
+		<input id="employeeName" style="line-height:26px;border:1px solid #ccc"></input>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true"
+			onclick="searchEmployee()" >查询</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"
+			onclick="addEmployee()">添加员工</a>
+	</div>
+
+	<div id="win" class="easyui-dialog" title="添加员工"
+		style="width: 400px; padding: 10px 20px; height: 410px;" closed="true"
+		buttons="#dlg-buttons">
+		<form id="fm" method="post"
+			style="margin-top: 20px; margin-left: 20px;">
+			<div class="fitem">
+				<label>项目编号:</label> <input id="projectId" name="projectId"
+					th:value="${ProjectId}" style="" class="easyui-textbox"
+					editable="false" />
+			</div>
+			<div class="fitem">
+				<label>姓名:</label> <input id="employeeName" name="employeeName"
+					style="" class="easyui-textbox" editable="true"
+					data-options="required:true" />
+			</div>
+			<div class="fitem">
+				<label>时薪:</label> <input id="hourSalary" name="hourSalary"
+					class="easyui-textbox" editable="true" data-options="required:true" />
+			</div>
+			<div class="fitem">
+				<label>联系电话:</label> <input id="phoneNumber" name="phoneNumber"
+					class="easyui-textbox" editable="true"
+					data-options="prompt:'请输入正确的手机号码。',validType:'phoneNum'" />
+			</div>
+			<div id="dlg-buttons" style="display: block">
+				<a id="confirm" href="javascript:void(0)"
+					class="easyui-linkbutton c6" iconcls="icon-ok"
+					onclick="postEmployee()" style="width: 90px">提交</a> <a
+					href="javascript:void(0)" class="easyui-linkbutton"
+					iconcls="icon-cancel"
+					onclick="javascript:$('#win').dialog('close')" style="width: 90px">取消</a>
+			</div>
+		</form>
+	</div>
+
+	<div id="win_hourlist" class="easyui-dialog" title="工时列表"
+		style="width: 800px; padding: 10px 20px; height: 410px;" closed="true">
+		<table class="easyui-datagrid" id="hourList" title="工时列表"
+			data-options="" toolbar="#addHour">
+		</table>
+		<div id="addHour">
+			<a id="addHourButton" href="#" class="easyui-linkbutton"
+				iconCls="icon-add" plain="true" onclick="">添加工时</a>
+		</div>
+	</div>
+
+	<div id="win_paylist" class="easyui-dialog" title="支出列表"
+		style="width: 800px; padding: 10px 20px; height: 410px;" closed="true">
+		<table class="easyui-datagrid" id="payList" title="支出列表"
+			data-options="" toolbar="#addPay">
+		</table>
+		<div id="addPay">
+			<a id="addPayButton" href="#" class="easyui-linkbutton"
+				iconCls="icon-add" plain="true" onclick="">添加支出</a>
+		</div>
+	</div>
+
+	<div id="win_checkout" class="easyui-dialog" title="结账"
+		style="width: 800px; padding: 10px 20px; height: 410px;" closed="true">
+		<table class="easyui-datagrid" id="checkOut" title="结账"
+			data-options="" toolbar="#checkOutToolBar">
+		</table>
+		<div id="checkOutToolBar">
+			<a id="checkOutComfirmButton" href="#" class="easyui-linkbutton"
+				iconCls="icon-add" plain="true" onclick="">结账确认</a>
+			<a id="checkOutExportButton" href="#" class="easyui-linkbutton"
+				iconCls="icon-save" plain="true" onclick="">导出账单</a>
+		</div>
+	</div>
+
+	<div id="win_checkout_detail" class="easyui-dialog" title="结账"
+		style="width: 800px; padding: 10px 20px; height: 410px;" closed="true">
+		<table class="easyui-datagrid" id="checkOutDetail" title="结账"
+			data-options="" toolbar="#checkOutDetailToolBar">
+		</table>
+		<div id="checkOutDetailToolBar">
+			<a id="checkOutDetailExportButton" href="#" class="easyui-linkbutton"
+				iconCls="icon-save" plain="true" onclick="">导出账单</a>
+		</div>
+	</div>
+
+	<div id="win_addhour" class="easyui-dialog" title="添加工时"
+		style="width: 400px; padding: 10px 20px; height: 410px;" closed="true"
+		buttons="#dlg-buttons-hour">
+		<form id="fm-hour" method="post"
+			style="margin-top: 20px; margin-left: 20px;">
+			<div class="fitem">
+				<label>员工编号:</label> <input id="win_addhour_employeeId"
+					name="employeeId" style="" class="easyui-textbox" editable="false" />
+			</div>
+			<div class="fitem">
+				<label>姓名:</label> <input id="win_addhour_employeeName"
+					name="employeeName" style="" class="easyui-textbox"
+					editable="false" />
+			</div>
+			<div class="fitem">
+				<label>时长:</label> <input name="workingTime"
+					class="easyui-numberspinner" precision="1" value="0.5"
+					data-options="increment:0.5" style="width: 100px;" />
+			</div>
+			<div class="fitem">
+				<label>日期:</label> <input id="win_addhour_workingDate"
+					name="workingDate" class="easyui-datebox"
+					data-options="sharedCalendar:'#cc',required:true" />
+			</div>
+			<div id="dlg-buttons-hour" style="display: block">
+				<a id="confirm-hour" href="javascript:void(0)"
+					class="easyui-linkbutton c6" iconcls="icon-ok" onclick="postHour()"
+					style="width: 90px">提交</a> <a href="javascript:void(0)"
+					class="easyui-linkbutton" iconcls="icon-cancel"
+					onclick="javascript:$('#win_addhour').dialog('close')"
+					style="width: 90px">取消</a>
+			</div>
+			<div id="cc" class="easyui-calendar"></div>
+		</form>
+	</div>
+
+	<div id="win_addpay" class="easyui-dialog" title="添加支出"
+		style="width: 400px; padding: 10px 20px; height: 410px;" closed="true"
+		buttons="#dlg-buttons-pay">
+		<form id="fm-pay" method="post"
+			style="margin-top: 20px; margin-left: 20px;">
+			<div class="fitem">
+				<label>员工编号:</label> <input id="win_addpay_employeeId"
+					name="employeeId" style="" class="easyui-textbox" editable="false" />
+			</div>
+			<div class="fitem">
+				<label>姓名:</label> <input id="win_addpay_employeeName"
+					name="employeeName" style="" class="easyui-textbox"
+					editable="false" />
+			</div>
+			<div class="fitem">
+				<label>支出金额:</label> <input name="payOutAmount"
+					class="easyui-numberspinner" value="100"
+					data-options="increment:50" style="width: 100px;" />
+			</div>
+			<div class="fitem">
+				<label>支出日期:</label> <input id="win_addpay_payOutDate"
+					name="payOutDate" class="easyui-datebox"
+					data-options="sharedCalendar:'#cc',required:true" />
+			</div>
+			<div id="dlg-buttons-pay" style="display: block">
+				<a id="confirm-pay" href="javascript:void(0)"
+					class="easyui-linkbutton c6" iconcls="icon-ok" onclick="postPay()"
+					style="width: 90px">提交</a> <a href="javascript:void(0)"
+					class="easyui-linkbutton" iconcls="icon-cancel"
+					onclick="javascript:$('#win_addpay').dialog('close')"
+					style="width: 90px">取消</a>
+			</div>
+		</form>
+	</div>
+
+	<script type="text/javascript">
+	function postBill(employeeId, jstr) {
+		$.ajax({
+	        type : "post",
+	        url : "/comfirmCaculate",
+	        dataType : "json",
+	        data : {
+	        	"employeeId":employeeId,
+	        	"jsonStr":jstr
+	        },
+	        success : function(data) {
+				if(data.status == 200) {
+					$.messager.alert('提示', data.message, 'info', function(){
+						$('#win_checkout').dialog('close');
+						$('#employees').datagrid("reload",{ });
+					});
+				}
+	        }
+	        });
+	}
+	
+	function checkOut(employeeId, employeeName) {
+		$('#win_checkout').dialog({left:150,top:50}).dialog({
+			onClose:function(){
+				$('#checkOut').datagrid("loadData", {total:0, rows:[], footer:[]});
+			}
+		}).dialog('open').dialog('setTitle', employeeName);
+		
+		$('#checkOut').datagrid({
+			  singleSelect:true,
+			  collapsible:true,
+			  fit:true,
+			  method:'get',
+			  toolbar:"#checkOutToolBar",
+			  showFooter:true,
+		      columns:[[   
+		          {field:'amountType',title:'收支类型',width:120,align:'center',formatter: function (value, rowData, rowIndex) {
+		        	  if(rowData.isFooter) {
+		        		  return value;
+		        	  }
+		        	  if(value == 0) {
+		        			return '收入';
+		        		} else if(value == 1) {
+		        			return '支出';
+		        		}                }
+		          }, 
+		          {field:'workingTime',title:'工作时长',width:180,align:'center'},   
+		          {field:'logDate',title:'收支日期',width:200,align:'center',formatter:function(value, rowData){
+		        	  if(rowData.isFooter) {
+		        		  return value;
+		        	  }
+		        	  var date = new Date(value);
+		        	  var y = date.getFullYear();
+		        	  var m = date.getMonth() + 1;
+		        	  var d = date.getDate();
+		        	  return y+'-'+m+'-'+d;
+		          }},
+		          {field:'amount',title:'金额',width:200,align:'center'}
+		      ]]
+		});
+		
+		var jstr;
+		$.ajax({
+             type : "get",
+             url : "/caculate?employeeId="+employeeId,
+             dataType : "json",
+             data : {},
+             success : function(data) {
+            	 jstr = JSON.stringify(data);
+            	 $('#checkOut').datagrid('loadData',data);
+             }
+             });
+		
+		$('#checkOutComfirmButton').off("click").bind("click", function(){
+			$.messager.confirm("提示", "确认结账?(结账后将不可添加工时和支出，状态会修改为已结账状态，请确认是否已经结清金额)", function(data){
+				if(data) {
+					postBill(employeeId, jstr);
+				}
+			});
+		});
+		
+		$('#checkOutExportButton').off("click").bind("click", function(){
+			var url = '/exportCaculate?employeeId='+employeeId;
+			window.open(url);
+		});
+	}
+	
+	function look(employeeId, employeeName) {
+		$('#win_checkout_detail').dialog({left:150,top:50}).dialog({
+			onClose:function(){
+				$('#checkOutDetail').datagrid("loadData", {total:0, rows:[], footer:[]});
+			}
+		}).dialog('open').dialog('setTitle', employeeName);
+		$('#checkOutDetail').datagrid({
+			  singleSelect:true,
+			  collapsible:true,
+			  fit:true,
+			  method:'get',
+			  url : "/caculateResult?employeeId="+employeeId,
+			  toolbar:"#checkOutDetailToolBar",
+			  showFooter:true,
+		      columns:[[   
+		          {field:'amountType',title:'收支类型',width:120,align:'center',formatter: function (value, rowData, rowIndex) {
+		        	  if(rowData.isFooter) {
+		        		  return value;
+		        	  }
+		        	  if(value == 0) {
+		        			return '收入';
+		        		} else if(value == 1) {
+		        			return '支出';
+		        		}                }
+		          }, 
+		          {field:'workingTime',title:'工作时长',width:180,align:'center'},   
+		          {field:'logDate',title:'收支日期',width:200,align:'center',formatter:function(value, rowData){
+		        	  if(rowData.isFooter) {
+		        		  return value;
+		        	  }
+		        	  var date = new Date(value);
+		        	  var y = date.getFullYear();
+		        	  var m = date.getMonth() + 1;
+		        	  var d = date.getDate();
+		        	  return y+'-'+m+'-'+d;
+		          }},
+		          {field:'amount',title:'金额',width:200,align:'center'}
+		      ]]
+		});
+		$('#checkOutDetailExportButton').off("click").bind("click", function(){
+			var url = '/exportCaculateResult?employeeId='+employeeId;
+			window.open(url);
+		});
+	}
+	
+	function hourList(employeeId, employeeName) {
+		$('#win_hourlist').dialog({left:150,top:50}).dialog({
+			onClose:function(){
+				$('#hourList').datagrid("loadData", {total:0, rows:[]});
+			}
+		}).dialog('open').dialog('setTitle', employeeName);
+		$('#hourList').datagrid({
+			  singleSelect:true,
+			  collapsible:true,
+			  pagination:true,
+			  method:'get',
+			  pageSize:10,
+			  toolbar:"#addHour",
+		      url:"/hourList?employeeId="+employeeId,   
+		      columns:[[   
+		          {field:'id',title:'工时编号',width:100,align:'center'},   
+		          {field:'employeeId',title:'员工编号',width:100,align:'center'},   
+		          {field:'workingTime',title:'工作时长',width:100,align:'center'},   
+		          {field:'workingDate',title:'工时日期',width:100,align:'center',formatter:function(value){
+		        	  var date = new Date(value);
+		        	  var y = date.getFullYear();
+		        	  var m = date.getMonth() + 1;
+		        	  var d = date.getDate();
+		        	  return y+'-'+m+'-'+d;
+		          }},
+		          {field:'addTime',title:'添加时间',width:200,align:'center', formatter:function(value) {
+		        	  var date = new Date(value);
+		        	  return date.toLocaleString();
+		          }},
+		          {field:'operate',title:'操作',align:'center',width:$(this).width()*0.1, 
+		        	  formatter:function(value, row, index){ 
+		        	    var str = '<a href="#" rel="external nofollow" name="operaDel" class="easyui-linkbutton" onclick="delHour('+row.id+')" ></a>'; 
+		        	    return str; 
+		        	}}
+		      ]],
+		      onLoadSuccess:function(data){  
+		    	    $("a[name='operaDel']").linkbutton({text:'删除',plain:true,iconCls:'icon-remove'});  
+		    	},
+		});
+		$('#addHourButton').bind("click", function(){
+			$('#win_addhour_employeeId').textbox('setValue',employeeId);
+			$('#win_addhour_employeeName').textbox('setValue',employeeName);
+			$('#win_addhour').dialog('open').dialog('setTitle', '添加工时');
+		});
+	}
+	
+	function payList(employeeId, employeeName) {
+		$('#win_paylist').dialog({left:150,top:50}).dialog({
+			onClose:function(){
+				$('#payList').datagrid("loadData", {total:0, rows:[]});
+			}
+		}).dialog('open').dialog('setTitle', employeeName);
+		$('#payList').datagrid({
+			  singleSelect:true,
+			  collapsible:true,
+			  pagination:true,
+			  method:'get',
+			  pageSize:10,
+			  toolbar:"#addPay",
+		      url:"/payList?employeeId="+employeeId,   
+		      columns:[[   
+		          {field:'id',title:'支出编号',width:100,align:'center'},   
+		          {field:'employeeId',title:'员工编号',width:100,align:'center'},   
+		          {field:'payOutAmount',title:'支出金额',width:100,align:'center'},   
+		          {field:'payOutDate',title:'支出日期',width:100,align:'center',formatter:function(value){
+		        	  var date = new Date(value);
+		        	  var y = date.getFullYear();
+		        	  var m = date.getMonth() + 1;
+		        	  var d = date.getDate();
+		        	  return y+'-'+m+'-'+d;
+		          }},
+		          {field:'addTime',title:'添加时间',width:200,align:'center', formatter:function(value) {
+		        	  var date = new Date(value);
+		        	  return date.toLocaleString();
+		          }},
+		          {field:'operate',title:'操作',align:'center',width:$(this).width()*0.1, 
+		        	  formatter:function(value, row, index){ 
+		        	    var str = '<a href="#" rel="external nofollow" name="operaDelPay" class="easyui-linkbutton" onclick="delPay('+row.id+')" ></a>'; 
+		        	    return str; 
+		        	}}
+		      ]],
+		      onLoadSuccess:function(data){  
+		    	    $("a[name='operaDelPay']").linkbutton({text:'删除',plain:true,iconCls:'icon-remove'});  
+		    	},
+		});
+		$('#addPayButton').bind("click", function(){
+			$('#win_addpay_employeeId').textbox('setValue',employeeId);
+			$('#win_addpay_employeeName').textbox('setValue',employeeName);
+			$('#win_addpay').dialog('open').dialog('setTitle', '添加支出');
+		});
+	}
+	
+	var projectIdInput = $("#projectIdInput").val();
+	var urlStr = '/employeeList?projectId='+projectIdInput;
+	 $('#employees').datagrid({
+			  singleSelect:true,
+			  collapsible:true,
+			  pagination:true,
+			  method:'get',
+			  pageSize:10,
+			  toolbar:"#tb",
+		      url:urlStr,   
+		      columns:[[   
+		          {field:'id',title:'员工编号',width:100,align:'center'},   
+		          {field:'employeeName',title:'姓名',width:100,align:'center'},   
+		          {field:'addTime',title:'添加时间',width:200,align:'center',formatter:function(value){
+		        	  var date = new Date(value);
+		        	  return date.toLocaleString();
+		          }},   
+		          {field:'hourSalary',title:'时薪',width:100,align:'center'},
+		          {field:'phoneNumber',title:'联系电话',width:200,align:'center'},
+		          {field:'finishFlag',title:'结账状态',width:100,align:'center',formatter: function (value, rowData, rowIndex) {
+		        	  if(value == 0) {
+		        			return '待结算';
+		        		} else if(value == 1) {
+		        			return '结算中';
+		        		} else if(value == 2) {
+		        			return '已结算';
+		        		}
+	                }
+		          },
+		          {field:'operate',title:'操作',align:'center',width:$(this).width()*0.1*3, 
+		        	  formatter:function(value, row, index){
+		        		if(row.finishFlag == 0) {
+		        			var str1 = '<a href="#" rel="external nofollow" name="opera1" class="easyui-linkbutton" onclick="hourList('+row.id+',\''+row.employeeName+'\')" ></a>'; 
+			        	    var str2 = '<a href="#" rel="external nofollow" name="opera2" class="easyui-linkbutton" onclick="payList('+row.id+',\''+row.employeeName+'\')"></a>';
+			        	    var str3 = '<a href="#" rel="external nofollow" name="opera3" class="easyui-linkbutton" onclick="checkOut('+row.id+',\''+row.employeeName+'\')"></a>';
+			        	    return str1+str2+str3;		        			
+		        		}
+		        		if(row.finishFlag == 2) {
+		        			var str1 = '<a href="#" rel="external nofollow" name="opera_look" class="easyui-linkbutton" onclick="look('+row.id+',\''+row.employeeName+'\')" ></a>';
+		        			return str1;
+		        		}
+		        	}}
+		      ]],
+		      onLoadSuccess:function(data){  
+		    	    $("a[name='opera1']").linkbutton({text:'工时列表',plain:true,iconCls:'icon-add'});  
+		    	    $("a[name='opera2']").linkbutton({text:'支出列表',plain:true,iconCls:'icon-edit'});
+		    	    $("a[name='opera3']").linkbutton({text:'结账',plain:true,iconCls:'icon-ok'});
+		    	    $("a[name='opera_look']").linkbutton({text:'查看结算结果',plain:true,iconCls:'icon-search'});
+		    	},
+		});
+	 
+	</script>
+</body>
+</html>

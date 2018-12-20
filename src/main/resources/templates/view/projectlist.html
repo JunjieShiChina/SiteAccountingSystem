@@ -1,0 +1,49 @@
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Basic Form - jQuery EasyUI Demo</title>
+</head>
+<body>
+	<table class="easyui-datagrid" id="projectList" title="项目列表"
+		data-options="singleSelect:true,collapsible:true,pagination:true,url:'/projectList',method:'get',pageSize:10,toolbar:toolbar">
+	</table>
+
+	<script type="text/javascript">
+	$('#projectList').datagrid({
+		  singleSelect:true,
+		  collapsible:true,
+		  pagination:true,
+		  method:'get',
+		  pageSize:10,
+		  toolbar:"toolbar",
+	      url:"/projectList",   
+	      columns:[[   
+	          {field:'id',title:'项目编号',width:100,align:'center'},   
+	          {field:'projectName',title:'项目名称',width:100,align:'center'},   
+	          {field:'createTime',title:'创建时间',width:200,align:'center', formatter:function(value) {
+	        	  var date = new Date(value);
+	        	  return date.toLocaleString();
+	          }},   
+	          {field:'finishFlag',title:'完成状态',width:100,align:'center',formatter: function (val, rowData, rowIndex) {
+	        	  if(val == 0) {
+	        			return '待结算';
+	        		} else if(val == 1) {
+	        			return '结算中';
+	        		} else if(val == 2) {
+	        			return '已结算';
+	        		}
+              }
+	          },
+	          {field:'operate',title:'操作',align:'center',width:$(this).width()*0.1, 
+	        	  formatter:function(value, row, index){ 
+	        	    var str = '<a href="#" rel="external nofollow" name="formatOper" class="easyui-linkbutton" onclick="self.parent.addTab(\''+row.projectName+'-员工列表\',\'/toEmployees?projectId='+row.id+'\', \'\', \'true\')" ></a>'; 
+	        	    return str; 
+	        	}}
+	      ]],
+	      onLoadSuccess:function(data){  
+	    	    $("a[name='formatOper']").linkbutton({text:'管理',plain:true,iconCls:'icon-edit'});  
+	    	},
+	});
+	</script>
+</body>
+</html>

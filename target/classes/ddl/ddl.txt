@@ -1,0 +1,58 @@
+use site_accounting_system;
+
+CREATE TABLE t_user( 
+username VARCHAR(50) PRIMARY KEY, 
+userpwd VARCHAR(50) NOT NULL
+);
+
+insert t_user VALUES ('admin', 'qwer1234');
+
+CREATE TABLE project( 
+id INTEGER(5) NOT NULL AUTO_INCREMENT, 
+project_name VARCHAR(50) NOT NULL COMMENT '项目名称',
+create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '项目创建时间',
+finish_flag INTEGER(1) NOT NULL DEFAULT '0' COMMENT '0:未结账, 1:结账中, 2：已结账',
+PRIMARY KEY(id)
+);
+
+CREATE TABLE employee( 
+id INTEGER(5) NOT NULL AUTO_INCREMENT, 
+employee_name VARCHAR(10) NOT NULL COMMENT '姓名',
+add_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+hour_salary INTEGER(4) NOT NULL DEFAULT '0' COMMENT '时薪',
+project_id INTEGER(5) COMMENT '所在项目',
+phone_number VARCHAR(12) COMMENT '联系电话',
+finish_flag INTEGER(1) NOT NULL DEFAULT '0' COMMENT '0:未结账, 1:结账中, 2：已结账',
+PRIMARY KEY(id)
+);
+
+CREATE TABLE employee_hour( 
+id INTEGER(5) NOT NULL AUTO_INCREMENT, 
+employee_id INTEGER(5) NOT NULL COMMENT '员工编号',
+add_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+working_time DECIMAL(2,1) NOT NULL DEFAULT '0' COMMENT '工时',
+working_date DATE NOT NULL COMMENT '工时日期',
+PRIMARY KEY(id)
+);
+
+CREATE TABLE pay_out( 
+id INTEGER(5) NOT NULL AUTO_INCREMENT, 
+employee_id INTEGER(5) NOT NULL COMMENT '员工编号',
+add_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+pay_out_amount INTEGER(5) NOT NULL DEFAULT '0' COMMENT '支出金额',
+pay_out_date DATE NOT NULL COMMENT '支出日期',
+PRIMARY KEY(id)
+);
+
+CREATE TABLE bill( 
+id INTEGER(5) NOT NULL AUTO_INCREMENT, 
+employee_id INTEGER(5) NOT NULL COMMENT '员工编号',
+add_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '结账时间',
+bill_json varchar(2000) NOT NULL DEFAULT '' COMMENT '结账账单',
+PRIMARY KEY(id)
+);
+
+
+
+
+
