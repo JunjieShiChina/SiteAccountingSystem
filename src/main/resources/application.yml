@@ -2,6 +2,6 @@ spring:
  datasource:
   driver-class-name: com.mysql.jdbc.Driver
   url: jdbc:mysql://49.234.98.166:3306/site_accounting_system?useUnicode=true&characterEncoding=UTF-8
-  username: shijunjie
-  password: password2
+  username: junjie
+  password: wssjj123
  thymeleaf:
